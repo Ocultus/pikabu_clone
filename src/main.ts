@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import {
   APPLICATION_PORT,
@@ -8,19 +7,11 @@ import {
   AWS_REGION,
 } from './common/constants';
 import { config } from 'aws-sdk';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  const swaggerOptions = new DocumentBuilder()
-    .setTitle('Pikabu clone')
-    .setDescription('Pikabu clone')
-    .setVersion('v1')
-    .addBearerAuth()
-    .build();
-
-  const document = SwaggerModule.createDocument(app, swaggerOptions);
-  SwaggerModule.setup('api', app, document);
+  app.useGlobalPipes(new ValidationPipe());
 
   config.update({
     accessKeyId: AWS_KEY_ID,

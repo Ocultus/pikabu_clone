@@ -1,19 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Post } from 'src/posts/post.entity';
 
 const tableName = 'users';
 @Entity({
   name: tableName,
 })
+@ObjectType()
 export class User {
-  @ApiProperty()
+  @Field((type) => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ type: String, format: 'email' })
+  @Field()
   @Column({ type: 'varchar', unique: true })
   email: string;
 
   //Relations
+  @Field((type) => [Post], { nullable: true })
+  @OneToMany(() => Post, (post) => post.user, {
+    cascade: true,
+  })
+  posts?: Post[];
 }

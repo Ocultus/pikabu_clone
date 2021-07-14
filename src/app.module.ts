@@ -2,22 +2,21 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './users/users.module';
 import { PostModule } from './posts/posts.module';
 import { CommentModule } from './comments/comments.module';
-import { ContentBookmarkModule } from './content-bookmarks/content-bookmarks.module';
-import { PostTagModule } from './post-tags/post-tags.module';
-import { ContentVoteModule } from './content-votes/content-votes.module';
-import { ImageModule } from './images/images.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { PostTagModule } from './post-tags/post-tags.module';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot({
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
+    PostModule,
     TypeOrmModule.forRoot(),
     UserModule,
-    PostModule,
     CommentModule,
-    ContentBookmarkModule,
     PostTagModule,
-    ContentVoteModule,
-    ImageModule,
   ],
 })
 export class AppModule {}
