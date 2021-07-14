@@ -13,9 +13,9 @@ export class UpdatePostDto {
   @IsString()
   @MinLength(6)
   @IsOptional()
-  title: string;
+  title?: string;
   @IsString()
   @MinLength(6)
   @IsOptional()
-  description: string;
+  description?: string;
 }

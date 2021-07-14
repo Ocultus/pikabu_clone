@@ -1,13 +1,29 @@
-import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { PostTagService } from 'src/post-tags/services/post-tags.service';
 import { Post } from './post.entity';
 import { PostService } from './services/posts.service';
 
-@Resolver((of) => Post)
+@Resolver(() => Post)
 export class PostResolver {
-  constructor(private readonly postService: PostService) {};
+  constructor(
+    private readonly postService: PostService,
+    private readonly postTagService: PostTagService,
+  ) {}
 
-  @Query((returns) => Post)
+  @Query(() => Post)
   async post(@Args('id', { type: () => ID }) id: Post['id']) {
     return this.postService.findOne(id);
+  }
+
+  @ResolveField()
+  async postTags(@Parent() post: Post) {
+    return this.postTagService.findManyByPostId(post.id);
   }
 }

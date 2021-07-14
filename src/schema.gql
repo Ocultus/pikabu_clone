@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PostTag {
+  id: ID!
+  name: String!
+  postId: String!
+}
+
 type Post {
   createAt: DateTime!
   updatedAt: DateTime!
@@ -10,6 +16,7 @@ type Post {
   userId: String!
   title: String!
   description: String!
+  postTags: [PostTag!]
 }
 
 """
@@ -26,4 +33,5 @@ type User {
 type Query {
   post(id: ID!): Post!
   user(id: ID!): User!
+  postTag(id: ID!): PostTag!
 }

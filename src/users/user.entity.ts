@@ -8,7 +8,7 @@ const tableName = 'users';
 })
 @ObjectType()
 export class User {
-  @Field((type) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -17,7 +17,7 @@ export class User {
   email: string;
 
   //Relations
-  @Field((type) => [Post], { nullable: true })
+  @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
   })

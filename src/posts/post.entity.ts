@@ -1,7 +1,14 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base-entity.dto';
+import { PostTag } from 'src/post-tags/post-tag.entity';
 import { User } from 'src/users/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 const tableName = 'posts';
 @Entity({
@@ -9,7 +16,7 @@ const tableName = 'posts';
 })
 @ObjectType()
 export class Post extends BaseEntity {
-  @Field((type) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,4 +37,10 @@ export class Post extends BaseEntity {
     onDelete: 'CASCADE',
   })
   user?: User;
+
+  @Field(() => [PostTag], { nullable: true })
+  @OneToMany(() => PostTag, (postTag) => postTag.post, {
+    cascade: true,
+  })
+  postTags?: PostTag[];
 }
