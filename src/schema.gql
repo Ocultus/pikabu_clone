@@ -30,8 +30,28 @@ type User {
   posts: [Post!]
 }
 
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type PaginatedPost {
+  edges: [PostEdge!]
+  pageInfo: PageInfo
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
 type Query {
   post(id: ID!): Post!
+  getPosts(first: Int, after: String, last: Int, before: String): PaginatedPost!
+  getFreshPosts: [Post!]!
+  getPostsByCreateAt: [Post!]!
   user(id: ID!): User!
   postTag(id: ID!): PostTag!
 }

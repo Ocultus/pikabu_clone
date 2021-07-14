@@ -1,6 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate } from 'src/common/pagging/paginate';
+import { PaginationArgs } from 'src/common/pagging/pagination-args';
 import { User } from 'src/users/user.entity';
+import { PaginatedPost } from '../paginated-post.entity';
 import { Post } from '../post.entity';
 import { CreatePostDto, UpdatePostDto } from '../posts.dto';
 import { PostRepository } from '../posts.repository';
@@ -41,5 +44,29 @@ export class PostService {
         userId: userId,
       },
     });
+  }
+
+  async getPaginatedPosts(
+    paginationArgs: PaginationArgs,
+  ): Promise<PaginatedPost> {
+    const query = this.postRepository.createQueryBuilder().select();
+
+    return paginate(query, paginationArgs);
+  }
+
+  async getPostsSortByCreateAt(): Promise<Post[]> {
+    const posts = await this.postRepository
+      .createQueryBuilder('posts')
+      .orderBy('posts.createAt')
+      .getMany();
+    return posts;
+  }
+
+  async getFreshPosts(): Promise<Post[]> {
+    const posts = await this.postRepository
+      .createQueryBuilder('posts')
+      .where(`posts.createAt >= NOW() - '1 day'::INTERVAL`)
+      .getMany();
+    return posts;
   }
 }
