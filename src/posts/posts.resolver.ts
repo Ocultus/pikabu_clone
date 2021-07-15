@@ -6,6 +6,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { CommentService } from 'src/comments/services/comments.service';
 import { PaginationArgs } from 'src/common/pagging/pagination-args';
 import { PostTagService } from 'src/post-tags/services/post-tags.service';
 import { PostVoteService } from 'src/post-votes/services/post-votes.service';
@@ -19,6 +20,7 @@ export class PostResolver {
     private readonly postService: PostService,
     private readonly postTagService: PostTagService,
     private readonly postVoteService: PostVoteService,
+    private readonly commentService: CommentService,
   ) {}
 
   @Query(() => Post)
@@ -34,6 +36,11 @@ export class PostResolver {
   @ResolveField()
   async postVotes(@Parent() post: Post) {
     return this.postVoteService.findManyByPostId(post.id);
+  }
+
+  @ResolveField()
+  async comments(@Parent() post: Post) {
+    return this.commentService.findManyByPostId(post.id);
   }
 
   @Query(() => PaginatedPost)

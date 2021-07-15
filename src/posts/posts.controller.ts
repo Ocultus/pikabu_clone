@@ -8,6 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { CreateCommentDto } from 'src/comments/comments.dto';
+import { CommentService } from 'src/comments/services/comments.service';
 import { PostTag } from 'src/post-tags/post-tag.entity';
 import { CreatePostTagDto } from 'src/post-tags/post-tags.dto';
 import { PostTagService } from 'src/post-tags/services/post-tags.service';
@@ -18,6 +20,7 @@ import { User } from 'src/users/users.decorator';
 import { Post } from './post.entity';
 import { CreatePostDto, UpdatePostDto } from './posts.dto';
 import { PostService } from './services/posts.service';
+import { Comment } from '../comments/comment.entity';
 
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
@@ -26,6 +29,7 @@ export class PostController {
     private readonly postService: PostService,
     private readonly postTagService: PostTagService,
     private readonly postVoteService: PostVoteService,
+    private readonly commentService: CommentService,
   ) {}
 
   @PostDecorator()
@@ -49,7 +53,7 @@ export class PostController {
     return this.postService.remove(id);
   }
 
-  @PostDecorator(':id/post-tags')
+  @PostDecorator(':id/tags')
   async savePostTag(
     @Body() createPostTagDto: CreatePostTagDto,
     @Param('id') postId: Post['id'],
@@ -57,12 +61,21 @@ export class PostController {
     return this.postTagService.save(createPostTagDto, postId);
   }
 
-  @PostDecorator(':id/post-votes')
+  @PostDecorator(':id/votes')
   async savePostVote(
     @Body() createPostVoteDto: CreatePostVoteDto,
     @Param('id') postId: Post['id'],
     @User('id') userId: string,
   ): Promise<PostVote> {
     return this.postVoteService.save(createPostVoteDto, userId, postId);
+  }
+
+  @PostDecorator(':id/comments')
+  async saveComment(
+    @Body() createCommentDto: CreateCommentDto,
+    @Param('id') postId: Post['id'],
+    @User('id') userId: string,
+  ): Promise<Comment> {
+    return this.commentService.save(createCommentDto, userId, postId);
   }
 }

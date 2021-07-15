@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommentRepository } from 'src/comments/comments.repository';
+import { CommentService } from 'src/comments/services/comments.service';
 import { PostTagRepository } from 'src/post-tags/post-tags.repository';
 import { PostTagService } from 'src/post-tags/services/post-tags.service';
 import { PostVoteRepository } from 'src/post-votes/post-votes.repository';
@@ -15,10 +17,17 @@ import { PostService } from './services/posts.service';
       PostRepository,
       PostTagRepository,
       PostVoteRepository,
+      CommentRepository,
     ]),
   ],
   controllers: [PostController],
-  providers: [PostService, PostResolver, PostTagService, PostVoteService],
+  providers: [
+    PostService,
+    PostResolver,
+    PostTagService,
+    PostVoteService,
+    CommentService,
+  ],
   exports: [PostService],
 })
 export class PostModule {}

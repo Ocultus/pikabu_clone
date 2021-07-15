@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Post } from 'src/posts/post.entity';
 import { PostVote } from 'src/post-votes/post-vote.entity';
+import { Comment } from '../comments/comment.entity';
 
 const tableName = 'users';
 @Entity({
@@ -29,4 +30,10 @@ export class User {
     cascade: true,
   })
   postVotes?: PostVote[];
+
+  @Field(() => [Comment], { nullable: true })
+  @OneToMany(() => Comment, (comment) => comment.user, {
+    cascade: true,
+  })
+  comments?: Comment[];
 }
