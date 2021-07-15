@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base-entity.dto';
 import { PostTag } from 'src/post-tags/post-tag.entity';
+import { PostVote } from 'src/post-votes/post-vote.entity';
 import { User } from 'src/users/user.entity';
 import {
   Column,
@@ -43,4 +44,10 @@ export class Post extends BaseEntity {
     cascade: true,
   })
   postTags?: PostTag[];
+
+  @Field(() => [PostVote], { nullable: true })
+  @OneToMany(() => PostVote, (postVote) => postVote.post, {
+    cascade: true,
+  })
+  postVotes?: PostVote[];
 }

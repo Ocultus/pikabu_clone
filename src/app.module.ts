@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PostTagModule } from './post-tags/post-tags.module';
+import { PostVotesModule } from './post-votes/post-votes.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PostTagModule } from './post-tags/post-tags.module';
     UserModule,
     CommentModule,
     PostTagModule,
+    PostVotesModule,
   ],
 })
 export class AppModule {}

@@ -6,6 +6,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { PostVoteService } from 'src/post-votes/services/post-votes.service';
 import { PostService } from 'src/posts/services/posts.service';
 import { UserService } from './services/users.service';
 import { User } from './user.entity';
@@ -15,6 +16,7 @@ export class UserResolver {
   constructor(
     private readonly userService: UserService,
     private readonly postService: PostService,
+    private readonly postVoteService: PostVoteService,
   ) {}
 
   @Query(() => User)
@@ -25,5 +27,10 @@ export class UserResolver {
   @ResolveField()
   async posts(@Parent() user: User) {
     return this.postService.findManyByUserId(user.id);
+  }
+
+  @ResolveField()
+  async postVotes(@Parent() user: User) {
+    return this.postVoteService.findManyByUserId(user.id);
   }
 }

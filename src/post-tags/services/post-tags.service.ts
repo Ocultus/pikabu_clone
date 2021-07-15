@@ -19,9 +19,7 @@ export class PostTagService {
     try {
       return await this.postTagRepository.save({ ...createPostTagDto, postId });
     } catch (error) {
-      console.log(error);
       if (error && error.constraint === uniquePostTagName) {
-        console.log(error);
         throw new BadRequestException('Pair Post/name duplicate');
       }
     }

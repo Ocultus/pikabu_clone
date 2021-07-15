@@ -8,6 +8,24 @@ type PostTag {
   postId: String!
 }
 
+type PostVote {
+  id: ID!
+  userId: String!
+  postId: String!
+  voteType: VoteType!
+  voteTime: DateTime!
+}
+
+enum VoteType {
+  LIKE
+  DISLIKE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Post {
   createAt: DateTime!
   updatedAt: DateTime!
@@ -17,17 +35,14 @@ type Post {
   title: String!
   description: String!
   postTags: [PostTag!]
+  postVotes: [PostVote!]
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type User {
   id: ID!
   email: String!
   posts: [Post!]
+  postVotes: [PostVote!]
 }
 
 type PageInfo {
@@ -48,10 +63,15 @@ type PostEdge {
 }
 
 type Query {
-  post(id: ID!): Post!
+  post(id: ID!): PostVote!
   getPosts(first: Int, after: String, last: Int, before: String): PaginatedPost!
+  getPostsByLikeCount: [Post!]!
   getFreshPosts: [Post!]!
   getPostsByCreateAt: [Post!]!
+  getMostLikedPosts: [Post!]!
+  getMostLiked24hPosts: [Post!]!
+  getPostsWithTag(tag: String!): [Post!]!
+  getPostsWithTags(tags: [String!]!): [Post!]!
   user(id: ID!): User!
   postTag(id: ID!): PostTag!
 }
