@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
+import { CommentVoteRepository } from 'src/comment-votes/comment-votes.repository';
+import { CommentVoteService } from 'src/comment-votes/services/comment-votes.service';
 import { CommentRepository } from 'src/comments/comments.repository';
 import { CommentService } from 'src/comments/services/comments.service';
 import { PostVoteRepository } from 'src/post-votes/post-votes.repository';
@@ -20,6 +22,7 @@ import { UserResolver } from './users.resolver';
     PostService,
     PostVoteService,
     CommentService,
+    CommentVoteService,
   ],
   imports: [
     TypeOrmModule.forFeature([
@@ -27,6 +30,7 @@ import { UserResolver } from './users.resolver';
       PostRepository,
       PostVoteRepository,
       CommentRepository,
+      CommentVoteRepository,
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],

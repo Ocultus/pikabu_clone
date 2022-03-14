@@ -84,4 +84,9 @@ export class PostResolver {
   ) {
     return this.postService.getPostsWithTags(tags);
   }
+
+  @Query(() => [Post])
+  async getHotPost() {
+    return this.postService.getMostCommentedPosts();
+  }
 }

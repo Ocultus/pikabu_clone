@@ -150,4 +150,17 @@ export class PostService {
     });
     return getPostsWithTags;
   }
+
+  async getMostCommentedPosts(limit = 10) {
+    limit = limit > 0 ? limit : 10;
+    const posts = await this.postRepository
+      .createQueryBuilder('posts')
+      .where(`posts.createAt >= NOW() - '1 day'::INTERVAL`)
+      .innerJoin('posts.Comments', 'comments')
+      .groupBy('posts.id')
+      .orderBy('COUNT(comments.id)', 'DESC')
+      .limit(limit)
+      .getMany();
+    return posts;
+  }
 }

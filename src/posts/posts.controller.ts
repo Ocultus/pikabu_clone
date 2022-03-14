@@ -5,7 +5,9 @@ import {
   Param,
   Post as PostDecorator,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { CreateCommentDto } from 'src/comments/comments.dto';
@@ -21,6 +23,8 @@ import { Post } from './post.entity';
 import { CreatePostDto, UpdatePostDto } from './posts.dto';
 import { PostService } from './services/posts.service';
 import { Comment } from '../comments/comment.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PostImageService } from 'src/post-images/services/post-images.service';
 
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
@@ -30,6 +34,7 @@ export class PostController {
     private readonly postTagService: PostTagService,
     private readonly postVoteService: PostVoteService,
     private readonly commentService: CommentService,
+    private readonly postImageService: PostImageService,
   ) {}
 
   @PostDecorator()
@@ -77,5 +82,16 @@ export class PostController {
     @User('id') userId: string,
   ): Promise<Comment> {
     return this.commentService.save(createCommentDto, userId, postId);
+  }
+
+  //@UseInterceptors(CheckContentGroupExistsInterceptor)
+  @UseInterceptors(FileInterceptor('file'))
+  @PostDecorator(':id/images')
+  async saveImage(
+    @Param('id')
+    postId: Post['id'],
+    @UploadedFile('file') file: Express.Multer.File,
+  ) {
+    return this.postImageService.save(file?.buffer, file?.originalname, postId);
   }
 }

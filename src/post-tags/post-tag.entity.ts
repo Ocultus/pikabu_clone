@@ -29,7 +29,7 @@ export class PostTag {
   postId: string;
 
   //Relations
-  @ManyToOne(() => Post, (post) => post.postTags, {
+  @ManyToOne(() => Post, (post) => post.tags, {
     onDelete: 'CASCADE',
   })
   post?: Post;

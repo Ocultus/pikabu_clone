@@ -2,19 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Comment {
-  id: ID!
-  text: String!
-  userId: String!
-  postId: String!
-}
-
-type PostTag {
-  id: ID!
-  name: String!
-  postId: String!
-}
-
 type PostVote {
   id: ID!
   userId: String!
@@ -32,6 +19,28 @@ enum VoteType {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type CommentVote {
+  id: ID!
+  userId: String!
+  commentId: String!
+  voteType: VoteType!
+  voteTime: DateTime!
+}
+
+type Comment {
+  id: ID!
+  text: String!
+  userId: String!
+  postId: String!
+  commentVotes: [CommentVote!]
+}
+
+type PostTag {
+  id: ID!
+  name: String!
+  postId: String!
+}
 
 type Post {
   createAt: DateTime!
@@ -52,6 +61,7 @@ type User {
   posts: [Post!]
   postVotes: [PostVote!]
   comments: [Comment!]
+  commentVotes: [CommentVote!]
 }
 
 type PageInfo {
@@ -71,6 +81,16 @@ type PostEdge {
   node: Post!
 }
 
+type PaginatedComment {
+  edges: [CommentEdge!]
+  pageInfo: PageInfo
+}
+
+type CommentEdge {
+  cursor: String!
+  node: Comment!
+}
+
 type Query {
   post(id: ID!): PostVote!
   getPosts(first: Int, after: String, last: Int, before: String): PaginatedPost!
@@ -81,7 +101,11 @@ type Query {
   getMostLiked24hPosts: [Post!]!
   getPostsWithTag(tag: String!): [Post!]!
   getPostsWithTags(tags: [String!]!): [Post!]!
+  getHotPost: [Post!]!
   user(id: ID!): User!
   comment(id: ID!): Comment!
+  getComments(first: Int, after: String, last: Int, before: String): PaginatedComment!
+  getCommentByLikeCount: [Comment!]!
+  getCommentByCreateAt: [Comment!]!
   postTag(id: ID!): PostTag!
 }

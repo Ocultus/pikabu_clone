@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Comment } from 'src/comments/comment.entity';
-import { BaseEntity } from 'src/common/base-entity.dto';
+import { BaseEntity } from 'src/common/base/base-date.entity';
+import { PostImage } from 'src/post-images/post-image.entity';
 import { PostTag } from 'src/post-tags/post-tag.entity';
 import { PostVote } from 'src/post-votes/post-vote.entity';
 import { User } from 'src/users/user.entity';
@@ -44,17 +45,23 @@ export class Post extends BaseEntity {
   @OneToMany(() => PostTag, (postTag) => postTag.post, {
     cascade: true,
   })
-  postTags?: PostTag[];
+  tags?: PostTag[];
 
   @Field(() => [PostVote], { nullable: true })
   @OneToMany(() => PostVote, (postVote) => postVote.post, {
     cascade: true,
   })
-  postVotes?: PostVote[];
+  votes?: PostVote[];
 
   @Field(() => [Comment], { nullable: true })
   @OneToMany(() => Comment, (comment) => comment.post, {
     cascade: true,
   })
   comments?: Comment[];
+
+  @Field(() => [PostImage], { nullable: true })
+  @OneToMany(() => PostImage, (postImage) => postImage.post, {
+    cascade: true,
+  })
+  images?: PostImage;
 }

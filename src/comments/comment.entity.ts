@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { CommentVote } from 'src/comment-votes/comment-vote.entity';
 import { Post } from 'src/posts/post.entity';
 import { User } from 'src/users/user.entity';
 import {
@@ -6,6 +7,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -41,4 +43,10 @@ export class Comment extends BaseEntity {
     onDelete: 'CASCADE',
   })
   post?: Post;
+
+  @Field(() => [CommentVote], { nullable: true })
+  @OneToMany(() => CommentVote, (commentVote) => commentVote.comment, {
+    cascade: true,
+  })
+  commentVotes?: CommentVote[];
 }

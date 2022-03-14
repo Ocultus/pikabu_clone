@@ -1,22 +1,8 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { BaseVoteEntity } from 'src/common/base/base-vote.entity';
 import { Post } from 'src/posts/post.entity';
 import { User } from 'src/users/user.entity';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
-
-export enum VoteType {
-  LIKE = 'like',
-  DISLIKE = 'dislike',
-}
-
-registerEnumType(VoteType, {
-  name: 'VoteType',
-});
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 
 const tableName = 'post-votes';
 export const uniquePostVoteName = 'UNIQUE_VOTES';
@@ -25,28 +11,13 @@ export const uniquePostVoteName = 'UNIQUE_VOTES';
 })
 @Unique(uniquePostVoteName, ['userId', 'postId'])
 @ObjectType()
-export class PostVote {
-  @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-  @Field()
-  @Column({ name: 'userId', type: 'uuid' })
-  userId: string;
-
+export class PostVote extends BaseVoteEntity {
   @Field()
   @Column({ name: 'postId', type: 'uuid' })
   postId: string;
 
-  @Field(() => VoteType)
-  @Column({ type: 'enum', enum: VoteType })
-  voteType: VoteType;
-
-  @Field()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  voteTime: Date;
-
   //Relations
-  @ManyToOne(() => Post, (post) => post.postVotes, {
+  @ManyToOne(() => Post, (post) => post.votes, {
     onDelete: 'CASCADE',
   })
   post?: Post;
